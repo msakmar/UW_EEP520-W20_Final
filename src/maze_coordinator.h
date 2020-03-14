@@ -19,7 +19,7 @@ class MazeCoordinatorController : public Process, public AgentInterface {
         }
         watch("SwitchMaze", [&](Event e) {
             std::cout << "Switching Maze\n";
-            Agent& a = add_agent("Maze 1", 0, 0, 0, {{"fill","gray"},{"stroke","black"}});
+            Agent& a = add_agent("Maze 2", 0, 0, 0, {{"fill","gray"},{"stroke","black"}});
 
             maze_number += 1;
         });

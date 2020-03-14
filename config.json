@@ -1,6 +1,6 @@
 {
 
-    "name": "My Enviro Project",
+    "name": "Maze Runner",
     "ip": "0.0.0.0",
     "port": 8765,
 
@@ -12,9 +12,14 @@
     "references": [
         {
             "definition": "defs/maze_1.json",
-            "style": { "fill": "", "stroke": "black" },
+            "style": { "fill": "black", "stroke": "grey" },
             "position": { "x": 0, "y": 0, "theta": 0 }
-        }           
+        },
+        {
+            "definition": "defs/maze_2.json",
+            "style": { "fill": "purple", "stroke": "gold" },
+            "position": { "x": 0, "y": 0, "theta": 0 }
+        }              
     ],
 
     "invisibles": [
