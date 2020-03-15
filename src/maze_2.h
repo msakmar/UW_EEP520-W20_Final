@@ -5,29 +5,27 @@
 
 using namespace enviro;
 
-class maze_2Controller : public Process, public AgentInterface {
+class Maze_2Controller : public Process, public AgentInterface {
 
     public:
-    maze_2Controller() : Process(), AgentInterface() {}
+    Maze_2Controller() : Process(), AgentInterface() {}
 
-    void init() {
-        prevent_rotation();
-    }
+    void init() {}
     void start() {}
     void update() {}
     void stop() {}
 
 };
 
-class maze_2 : public Agent {
+class Maze_2 : public Agent {
     public:
-    maze_2(json spec, World& world) : Agent(spec, world) {
+    Maze_2(json spec, World& world) : Agent(spec, world) {
         add_process(c);
     }
     private:
-    maze_2Controller c;
+    Maze_2Controller c;
 };
 
-DECLARE_INTERFACE(maze_2)
+DECLARE_INTERFACE(Maze_2)
 
 #endif

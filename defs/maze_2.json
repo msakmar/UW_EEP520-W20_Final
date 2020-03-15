@@ -1,12 +1,15 @@
 {
-    "name": "maze_2",
-    "type": "dynamic",
-    "description": "Replace this string with a description",
+    "name": "Maze_2",
+    "type": "static",
+    "description": "The Second Maze",
     "shape": [
-        { "x": -10, "y": 10 },
-        { "x": 10, "y": 10 },
-        { "x": 10, "y": -10 },
-        { "x": -10, "y": -10 }
+        { "x": -35, "y": -35 },
+        { "x": 35, "y": -35 },
+        { "x": 35, "y": 35 },
+        { "x": -30, "y": -35 },
+        { "x": -90, "y": 95 },
+        { "x": -95, "y": 95 },
+        { "x": -95, "y": -95 }
     ],
     "friction": {
       "collision": 5,

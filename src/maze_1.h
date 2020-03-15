@@ -10,9 +10,7 @@ class Maze_1Controller : public Process, public AgentInterface {
     public:
     Maze_1Controller() : Process(), AgentInterface() {}
 
-    void init() {
-        prevent_rotation();
-    }
+    void init() {}
     void start() {}
     void update() {}
     void stop() {}

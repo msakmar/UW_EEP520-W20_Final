@@ -1,0 +1,19 @@
+{
+  "name": "Rect_5_65",
+  "type": "static",
+  "description": "A 5-unit high, 65-unit wide rectangle.",
+  "shape": [
+    { "x": -32.5, "y": 2.5 },
+    { "x": -32.5, "y": -2.5 },
+    { "x": 32.5, "y": -2.5 },
+    { "x": 32.5, "y": 2.5 }
+  ],
+  "friction": {
+    "collision": 5,
+    "linear": 40,
+    "rotational": 600
+  },
+  "sensors": [],
+  "mass": 1,    
+  "controller": "lib/rect_5_65.so"
+}

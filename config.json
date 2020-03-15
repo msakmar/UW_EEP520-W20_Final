@@ -6,22 +6,56 @@
 
     "buttons": [],
 
-    "agents": [    
-    ],
+    "agents": [],
 
     "references": [
         {
             "definition": "defs/maze_1.json",
-            "style": { "fill": "black", "stroke": "grey" },
+            "style": { "fill": "", "stroke": "" },
             "position": { "x": 0, "y": 0, "theta": 0 }
         },
         {
             "definition": "defs/maze_2.json",
-            "style": { "fill": "purple", "stroke": "gold" },
+            "style": { "fill": "", "stroke": "" },
             "position": { "x": 0, "y": 0, "theta": 0 }
-        }              
+        },
+        {
+            "definition": "defs/rect_5_65.json",
+            "style": { "fill": "", "stroke": "" },
+            "position": { "x": 0, "y": 0, "theta": 0 }
+        },
+        {
+            "definition": "defs/rect_5_70.json",
+            "style": { "fill": "", "stroke": "" },
+            "position": { "x": 0, "y": 0, "theta": 0 }
+        },
+        {
+            "definition": "defs/rect_5_190.json",
+            "style": { "fill": "", "stroke": "" },
+            "position": { "x": 0, "y": 0, "theta": 0 }
+        },
+        {
+            "definition": "defs/rect_6_66.json",
+            "style": { "fill": "", "stroke": "" },
+            "position": { "x": 0, "y": 0, "theta": 0 }
+        },
+        {
+            "definition": "defs/rect_6_126.json",
+            "style": { "fill": "", "stroke": "" },
+            "position": { "x": 0, "y": 0, "theta": 0 }
+        },
+        {
+            "definition": "defs/rect_6_186.json",
+            "style": { "fill": "", "stroke": "" },
+            "position": { "x": 0, "y": 0, "theta": 0 }
+        },
+        {
+            "definition": "defs/rect_6_306.json",
+            "style": { "fill": "", "stroke": "" },
+            "position": { "x": 0, "y": 0, "theta": 0 }
+        }
     ],
-
+    
     "invisibles": [
         {
             "definition": "defs/maze_coordinator.json",
@@ -29,44 +63,5 @@
         }   
     ],
 
-    "statics": [
-        {
-            "style": { "fill": "gray", "stroke": "none" },
-            "shape": [
-                { "x": -350, "y": -200 },
-                { "x": -350,  "y": 200 },
-                { "x": -340,  "y": 200 },
-                { "x": -340, "y": -200 }
-            ]
-        },
-        {
-            "style": { "fill": "gray", "stroke": "none" },
-            "shape": [
-                { "x": 350, "y": -200 },
-                { "x": 350,  "y": 200 },
-                { "x": 340,  "y": 200 },
-                { "x": 340, "y": -200 }
-            ]
-        },
-        {
-            "style": { "fill": "gray", "stroke": "none" },
-            "shape": [
-                { "x": -350, "y": 200 },
-                { "x": 350,  "y": 200 },
-                { "x": 350,  "y": 190 },
-                { "x": -350, "y": 190 }
-            ]
-        },
-        {
-            "style": { "fill": "gray", "stroke": "none" },
-            "shape": [
-                { "x": -350, "y": -200 },
-                { "x": 350,  "y": -200 },
-                { "x": 350,  "y": -190 },
-                { "x": -350, "y": -190 }
-            ]
-        }
-
-    ]
-
+    "statics": []
 }

@@ -1,6 +1,6 @@
 {
   "name": "MazeCoordinator",
   "type": "invisible",
-  "description": "Runs the maze show, but isn't rendered",  
+  "description": "Changes the mazes, but isn't rendered",  
   "controller": "lib/maze_coordinator.so"
 }

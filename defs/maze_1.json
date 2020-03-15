@@ -1,6 +1,6 @@
 {
     "name": "Maze_1",
-    "type": "dynamic",
+    "type": "static",
     "description": "The First Maze",
     "shape": [
       { "x": -35, "y": 240 },
