@@ -17,6 +17,7 @@ class MazeCoordinatorController : public Process, public AgentInterface {
         if( initial == 0 ) {
             std::cout << "Adding Maze 1\n";
             current_maze_agents_ids = build_maze_1();
+            add_robot("robot_1", 60, 60, -90*(M_PI/180));
             initial = 1;
             maze_number = 1;
         }
@@ -45,21 +46,25 @@ class MazeCoordinatorController : public Process, public AgentInterface {
             case 1:
                 std::cout << "Adding Maze 2\n";
                 current_maze_agents_ids = build_maze_2();
+                add_robot("robot_1", 60, 60, -90*(M_PI/180));
                 maze_number = 2;
                 break;
             case 2:
                 std::cout << "Adding Maze 3\n";
                 current_maze_agents_ids = build_maze_3();
+                add_robot("robot_1", 60, 0, 180*(M_PI/180));
                 maze_number = 3;
                 break;
             case 3:
                 std::cout << "Adding Maze 4\n";
                 current_maze_agents_ids = build_maze_4();
+                add_robot("robot_1", 0, 120, 180*(M_PI/180));
                 maze_number = 4;
                 break;
             case 4:
                 std::cout << "Adding Maze 1\n";
                 current_maze_agents_ids = build_maze_1();
+                add_robot("robot_1", 60, 60, -90*(M_PI/180));
                 maze_number = 1;
                 break;
             default:
@@ -74,14 +79,22 @@ class MazeCoordinatorController : public Process, public AgentInterface {
     void start() {}
 
     void update() {
-        if ( counter++ > 100 ) {
-            std::cout << "Emit event to switch Maze\n";
-            emit( Event( "SwitchMaze" ) );
-            counter = 0;
-            initial = 0;
-        }
+        // if ( counter++ > 100 ) {
+        //     std::cout << "Emit event to switch Maze\n";
+        //     emit( Event( "SwitchMaze" ) );
+        //     counter = 0;
+        //     initial = 0;
+        // }
     }
     void stop() {}
+
+    void add_robot(string robot_type, double loc_x, double loc_y, double loc_theta) {
+        emit( Event ( "Add Robot", {
+            { "robot_type", "Rob_2"},
+            { "location_x", loc_x},
+            { "location_y", loc_y},
+            { "location_theta", loc_theta} } ) );
+    }
 
     vector<int> build_maze_original_messed_up() {
         vector<int> maze_agent_ids;

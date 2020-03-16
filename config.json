@@ -10,6 +10,11 @@
 
     "references": [
         {
+            "definition": "defs/rob_2.json",
+            "style": { "fill": "blue", "stroke": "black" },
+            "position": { "x": 0, "y": 0, "theta": 0 }
+        },
+        {
             "definition": "defs/maze_1.json",
             "style": { "fill": "", "stroke": "" },
             "position": { "x": 0, "y": 0, "theta": 0 }
@@ -58,9 +63,13 @@
     
     "invisibles": [
         {
+            "definition": "defs/robot_coordinator.json",
+            "rendered": false
+        },
+        {
             "definition": "defs/maze_coordinator.json",
             "rendered": false
-        }   
+        }
     ],
 
     "statics": []
