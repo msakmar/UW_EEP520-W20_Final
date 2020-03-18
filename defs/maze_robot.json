@@ -1,0 +1,19 @@
+{
+    "name": "maze_robot",
+    "type": "dynamic",
+    "description": "Replace this string with a description",
+    "shape": [
+        { "x": -10, "y": 10 },
+        { "x": 10, "y": 10 },
+        { "x": 10, "y": -10 },
+        { "x": -10, "y": -10 }
+    ],
+    "friction": {
+      "collision": 5,
+      "linear": 40,
+      "rotational": 700
+    },
+    "sensors": [],
+    "mass": 1,    
+    "controller": "lib/maze_robot.so"
+}

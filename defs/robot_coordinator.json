@@ -1,6 +1,0 @@
-{
-  "name": "robot_coordinator",
-  "type": "invisible",
-  "description": "Changes the robot, but isn't rendered",  
-  "controller": "lib/robot_coordinator.so"
-}

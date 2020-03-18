@@ -1,6 +1,6 @@
 Project Goal
 ===
-- ***Project 'Maze Runner'***: Utilizes enviro.  Illustrates sensors, decorations, dynamically loading different mazes, and labels
+- ***Project 'Robot Maze'***: Utilizes enviro.  Illustrates sensors, decorations, dynamically loading different mazes, and labels
 - ***Goal***: The objective of the project is to create a robot agent that can solve four non-looping mazes.  Each maze will be loaded
 dynamically, starting with a smaller one and getting more complicated with each subsequent maze.  The code to this project must be well documented and should be stable.  
 - ***Additional features (goals)***:

@@ -10,8 +10,18 @@
 
     "references": [
         {
-            "definition": "defs/rob_2.json",
+            "definition": "defs/maze_robot.json",
             "style": { "fill": "blue", "stroke": "black" },
+            "position": { "x": 0, "y": 0, "theta": 0 }
+        },
+        {
+            "definition": "defs/placer.json",
+            "style": { "fill": "orange", "stroke": "orange" },
+            "position": { "x": 0, "y": 0, "theta": 0 }
+        },
+        {
+            "definition": "defs/maze_text.json",
+            "style": { "fill": "white", "stroke": "white" },
             "position": { "x": 0, "y": 0, "theta": 0 }
         },
         {
@@ -62,10 +72,6 @@
     ],
     
     "invisibles": [
-        {
-            "definition": "defs/robot_coordinator.json",
-            "rendered": false
-        },
         {
             "definition": "defs/maze_coordinator.json",
             "rendered": false

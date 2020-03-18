@@ -1,0 +1,13 @@
+{
+    "name": "MazeText",
+    "type": "noninteractive",
+    "description": "Renders text, but should be hidden from the user view",
+    "shape": [
+        { "x": -0.1, "y": 0.1 },
+        { "x": 0.1, "y": 0.1 },
+        { "x": 0.1, "y": -0.1 },
+        { "x": -0.1, "y": -0.1 }
+    ],
+    "sensors": [],  
+    "controller": "lib/maze_text.so"
+}
