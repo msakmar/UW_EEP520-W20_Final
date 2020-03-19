@@ -25,7 +25,6 @@ int round(int numToRound, int multiple ) {
     }
 }
 
-
 //! A class for controlling a robot agent
 
 //! Watches for input from the user via the keyboard and induces forces onto a robot agent
@@ -34,7 +33,7 @@ int round(int numToRound, int multiple ) {
 class maze_robotController : public Process, public AgentInterface {
 
     public:
-    maze_robotController() : Process(), AgentInterface(), f(0), tau(0), positions_been() {}
+    maze_robotController() : Process(), AgentInterface(), f(0), tau(0), positions_been(), collision_counter(0), old_collision_counter(0) {}
 
     //! Initialization method. This method should be overridden by derived
     //! classes. It will usually be called once, after all processes and
@@ -49,35 +48,39 @@ class maze_robotController : public Process, public AgentInterface {
 
         //Record collitions with the walls of the maze
         notice_collisions_with("Rect_6_66", [&](Event &e) {
-            std::cout << "Ran into a Rect_6_66 wall!\n";
+            // std::cout << "Ran into a Rect_6_66 wall!\n";
+            collision_counter++;
         });  
 
         //Record collitions with the walls of the maze
         notice_collisions_with("Rect_6_126", [&](Event &e) {
-            std::cout << "Ran into a Rect_6_126 wall!\n";
+            // std::cout << "Ran into a Rect_6_126 wall!\n";
+            collision_counter++;
         }); 
 
         //Record collitions with the walls of the maze
         notice_collisions_with("Rect_6_186", [&](Event &e) {
-            std::cout << "Ran into a Rect_6_186 wall!\n";
+            // std::cout << "Ran into a Rect_6_186 wall!\n";
+            collision_counter++;
         }); 
 
         //Record collitions with the walls of the maze
         notice_collisions_with("Rect_6_306", [&](Event &e) {
-            std::cout << "Ran into a Rect_6_306 wall!\n";
+            // std::cout << "Ran into a Rect_6_306 wall!\n";
+            collision_counter++;
         }); 
 
         //Determine user input via the keyboard keydown events
         watch("keydown", [&](Event &e) {
             auto k = e.value()["key"].get<std::string>();
             if ( k == "w" ) {
-                f = magnitude;              
+                f = 0.85*magnitude;              
             } else if ( k == "s" ) {
-                f = -magnitude;  
+                f = -0.85*magnitude;  
             } else if ( k == "a" ) {
-                tau = -magnitude;
+                tau = -0.75*magnitude;
             } else if ( k == "d" ) {
-                tau = magnitude;
+                tau = 0.75*magnitude;
             } else if ( k == "z" ) {
                 std::cout << "Pressed Z to print positions_been\n";
                 for (auto it = positions_been.begin(); it != positions_been.end(); it++ ) {
@@ -105,8 +108,7 @@ class maze_robotController : public Process, public AgentInterface {
     //! It may be called multiple times, if the manager is started and stopped.
     void start() {}
 
-    //! Update method. This method should be  overridden by derived
-    //! classes. It will be called repeatedly by the manager at a frequency
+    //! Update method. It will be called repeatedly by the manager at a frequency
     //! determined by the period used when the process is scheduled with the
     //! Manager (see Elma::Manager::schedule).
     void update() {
@@ -138,7 +140,16 @@ class maze_robotController : public Process, public AgentInterface {
                 //IN AN OLD CELL/AREA
             }
             previous_cell = new_cell;
-        }        
+        }
+
+        if ( old_collision_counter != collision_counter ) {
+            //Emit an event to update the collision counter
+            emit ( Event( "UpdateCounter", {
+                { "collision_counter", collision_counter},
+            } ) );
+
+            old_collision_counter = collision_counter;
+        }
 
         //Debug code to print out the current position, new cell, and current cell information
         // label("Current Position: " + std::to_string((int) x()) 
@@ -172,6 +183,8 @@ class maze_robotController : public Process, public AgentInterface {
     std::tuple<int,int> new_cell;
     std::set<std::tuple<int,int>> positions_been;
     vector<int> current_placer_agent_ids;
+    int collision_counter;
+    int old_collision_counter;
 };
 
 class maze_robot : public Agent {

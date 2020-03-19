@@ -1,13 +1,7 @@
 Project Goal
 ===
-- ***Project 'Robot Maze'***: Utilizes enviro.  Illustrates decorations, dynamically loading different mazes, and labels
-- ***Goal***: The objective of the project is to create a robot agent that can solve four non-looping mazes.  Each maze will be loaded
-dynamically, starting with a smaller one and getting more complicated with each subsequent maze.  The code to this project must be well documented and should be stable.  
-- ***Additional features (goals)***:
-    - Decorating the maze and the robot agent dynamically through the use of buttons
-    - Buttons change the behavior of the robot
-    - User can take control of the robot at any time via the keyboard
-    - The maze changes tile color as the robot passes over a tile, indicating the robot 'has been there before' or made a choice to take a left, right, or straight turn
+- ***Project 'Robot Maze'***: Utilizes enviro.  Illustrates decorations, dynamically loading different mazes using noninteractive agents and invisible agents, and keyboard input control.
+- ***Goal***: The objective of the project is to enable a user to solve four non-looping mazes by using the 'w-a-s-d' keys as input.  Each maze will be loaded dynamically, starting with a smaller one and getting more complicated with each subsequent maze.  The code to this project must be well documented and should be stable.  
 
 Key Challenges
 ===
@@ -25,7 +19,7 @@ Key Challenges
 - ***Dynamically loading the robot***
     - The original maze robot was implemented using sensors, but an unforeseen bug caused segmentation faults loading an invisible agent that implemented sensors.  Originally a second invisible agent was created for managing multiple robot agents, called `robot_coordinator`.
         - To determine what was causing the segmentation fault, the robot was first removed; this stopped the segementation faults
-        - Next, the contents of the `robot_coordinator` were placed into the `maze_controller` and the robot agent was added back in.  However, the segmentation faults still occurred.
+        - Next, the contents of the `robot_coordinator` were placed into the `maze_coordinator` and the robot agent was added back in.  However, the segmentation faults still occurred.
         - A third attempted work-around was to load the agent with sensors as 'dynamic', but off-screen, and to simply teleport the agent around as-needed, but that also caused a segmentation fault 
         - Further attempts involved simpler agents.  The multiagent example from the `enviro` github, which includes an invisible agent, was used to determine that *any* project that involved an agent with sensors and an invisible agent caused segmentation faults
 - ***Tracking where the robot has been in the maze, highlighting the previous 'cells'***

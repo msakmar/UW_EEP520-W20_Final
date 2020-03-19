@@ -4,16 +4,16 @@
     "description": "Replace this string with a description",
     "shape": [
         { "x": -10, "y": 10 },
-        { "x": 10, "y": 10 },
-        { "x": 10, "y": -10 },
-        { "x": -10, "y": -10 }
+        { "x": -6, "y": 0 },
+        { "x": -10, "y": -10 },
+        { "x": 10, "y": 0 }
     ],
     "friction": {
       "collision": 5,
       "linear": 40,
-      "rotational": 700
+      "rotational": 550
     },
     "sensors": [],
-    "mass": 1,    
+    "mass": 0.75,    
     "controller": "lib/maze_robot.so"
 }

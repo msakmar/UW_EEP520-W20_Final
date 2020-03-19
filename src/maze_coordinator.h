@@ -4,6 +4,7 @@
 #include "enviro.h"
 #include <vector>
 #include <math.h>
+#include <tuple>
 
 using namespace enviro;
 
@@ -20,10 +21,14 @@ class MazeCoordinatorController : public Process, public AgentInterface {
         AgentInterface(),
         initial(0),
         maze_number(0),
-        counter(0),
         default_robot("maze_robot"),
-        current_maze_agents_ids()
-        {}    
+        current_maze_agents_ids(),
+        current_placer_agent_ids(),
+        maze_collision_counter(0),
+        counter_text_agent_id(-1),
+        current_placer_tuples(),
+        make_placers(1)
+        {}
         
     //! Initialization method. This method should be overridden by derived
     //! classes. It will usually be called once, after all processes and
@@ -31,13 +36,13 @@ class MazeCoordinatorController : public Process, public AgentInterface {
     //! the Manager starts running.
     void init() {
         Agent& maze_text_agent = add_agent("MazeText", 0, 0, 0, {{"fill","white"},{"stroke","white"}});
-
-        std::cout << "Current placer size: " << current_placer_agent_ids.size() << "\n";
+        Agent& maze_collision_counter_agent = add_agent("MazeText", 0, 0, 0, {{"fill","white"},{"stroke","white"}});
+        counter_text_agent_id = maze_collision_counter_agent.get_id();
 
         if( initial == 0 ) {
             // std::cout << "Adding Maze 1\n";
             current_maze_agents_ids = build_maze_1();
-            current_robot_agent_ids = add_robot(default_robot, 60, 60, -90*(M_PI/180));
+            current_robot_agent_id = add_robot(default_robot, 60, 60, -90*(M_PI/180));
             maze_text_agent.decorate(R"(<g>
                 <style> 
                 .heavy { font: bold 30px sans-serif; fill: green;}
@@ -45,22 +50,20 @@ class MazeCoordinatorController : public Process, public AgentInterface {
                 <text x="0" y="-110" dominant-baseline="middle" text-anchor="middle" class="heavy">Maze 1</text></g>)"
             );            
             initial = 1;
-            maze_number = 3;
-        }   
+            maze_number = 1;
+            make_placers = 1;
+        }
+
+        watch("UpdateCounter", [&](Event e) {
+            maze_collision_counter = e.value()["collision_counter"];
+        });
 
         watch("AddPlacer", [&](Event e) {
-            std::cout << "Adding a placer\n";
             int current_cell_x = e.value()["cell_x"];
             int current_cell_y = e.value()["cell_y"];
             int current_cell_theta = e.value()["cell_theta"];
-
-            Agent& temp = add_agent("placer", current_cell_x, current_cell_y, current_cell_theta, { {"fill", "orange"}, {"fill-opacity","25%"} } );
-
-            std::cout << "Adding a new placer: " << temp.get_id() << "\n";
-            current_placer_agent_ids.push_back( temp.get_id() );
-
-            std::cout << "Current placer agent id size: " << current_placer_agent_ids.size()  << "\n";
-
+            std::tuple<int,int,int,int> temp_placer = std::make_tuple( current_cell_x, current_cell_y, current_cell_theta, 0 );
+            current_placer_tuples.push_back( temp_placer );
         });
 
         //! Remove existing maze agents, stogreen in a current_maze_agents_ids vector
@@ -74,20 +77,17 @@ class MazeCoordinatorController : public Process, public AgentInterface {
                 remove_agent( (*it) );
             }
 
-            for( auto it = current_robot_agent_ids.begin(); it < current_robot_agent_ids.end(); it++ ) {
-                remove_agent( (*it) );
-            }
+            remove_agent( current_robot_agent_id );
 
             //Clear the maze agent ids vector
             current_maze_agents_ids.clear();
-            current_robot_agent_ids.clear();
 
             //Determine which maze to create next
             switch ( maze_number ) {
             case 1:
-                // std::cout << "Adding Maze 2\n";
+                //std::cout << "Adding Maze 2\n";
                 current_maze_agents_ids = build_maze_2();
-                current_robot_agent_ids = add_robot(default_robot, 0, 60, 0);
+                current_robot_agent_id = add_robot(default_robot, 0, 60, 0);
                 maze_text_agent.decorate(R"(<g>
                     <style> 
                     .heavy { font: bold 30px sans-serif; fill: green;}
@@ -99,7 +99,7 @@ class MazeCoordinatorController : public Process, public AgentInterface {
             case 2:
                 // std::cout << "Adding Maze 3\n";
                 current_maze_agents_ids = build_maze_3();
-                current_robot_agent_ids = add_robot(default_robot, 0, 0, 180*(M_PI/180));
+                current_robot_agent_id = add_robot(default_robot, 0, 0, 180*(M_PI/180));
                 maze_text_agent.decorate(R"(<g>
                     <style> 
                     .heavy { font: bold 30px sans-serif; fill: green;}
@@ -111,7 +111,7 @@ class MazeCoordinatorController : public Process, public AgentInterface {
             case 3:
                 // std::cout << "Adding Maze 4\n";
                 current_maze_agents_ids = build_maze_4();
-                current_robot_agent_ids = add_robot(default_robot, 0, 120, 180*(M_PI/180));
+                current_robot_agent_id = add_robot(default_robot, 0, 120, 180*(M_PI/180));
                 maze_text_agent.decorate(R"(<g>
                     <style> 
                     .heavy { font: bold 30px sans-serif; fill: green;}
@@ -121,31 +121,32 @@ class MazeCoordinatorController : public Process, public AgentInterface {
                 maze_number = 4;
                 break;
             case 4:
-                // std::cout << "Resetting...\n";
+                //For indicating to remove the placers
+                make_placers = 0;
 
-                for( auto it = current_placer_agent_ids.begin(); it < current_placer_agent_ids.end(); it++ ) {
-                    remove_agent( (*it) );
+                int x_temp = -120;
+                int y_temp = -120;
+
+                for (int i = 0; i < 5; i ++ ) {
+                    for (int j = 0; j < 5; j ++ ) {
+                        Agent& temp_end_placers = add_agent("placer", x_temp + 60*i, y_temp + 60*j, 0, {{"fill","white"},{"stroke","white"}});
+                    }
                 }
-                
-                current_placer_agent_ids.clear();
-                std::cout << "Adding Maze 1\n";
 
-                current_maze_agents_ids = build_maze_1();
-                current_robot_agent_ids = add_robot(default_robot, 60, 60, -90*(M_PI/180));
-                maze_text_agent.decorate(R"(<g>
-                    <style> 
-                    .heavy { font: bold 30px sans-serif; fill: green;}
-                    </style>
-                    <text x="0" y="-110" dominant-baseline="middle" text-anchor="middle" class="heavy">Maze 1</text></g>)"
+                Agent& temp_end_placer = add_agent("placer", 0, 0,0, {{"fill","white"},{"stroke","white"}});
+                maze_text_agent.decorate("");
+
+                temp_end_placer.decorate(R"(<g>
+                <style>
+                    .thanks { font: italic 30px sans-serif; fill: purple; }
+                    .ending { font: bold 50px sans-serif; fill: gold; }
+                </style>
+                <text x="0" y="40" dominant-baseline="middle" text-anchor="middle" class="thanks">Thank you for playing!</text>
+                <text x="0" y="0" dominant-baseline="middle" text-anchor="middle" class="ending">THE END</text>
+                    </g>)"
                 );
-                maze_number = 1;
+                maze_number = -1;
                 break;
-            default:
-                // leave empty
-                std::cout << "Default maze_numer switch statement.\n";
-                std::cout << "Adding Maze 1\n";
-                current_maze_agents_ids = build_maze_1();
-                current_robot_agent_ids = add_robot(default_robot, 60, 60, -90*(M_PI/180));
             }
         });
      
@@ -161,11 +162,54 @@ class MazeCoordinatorController : public Process, public AgentInterface {
     //! determined by the period used when the process is scheduled with the
     //! Manager (see Elma::Manager::schedule).
     void update() {
-        if ( counter++ > 100 ) {
+        Agent& Robot_Agent_Temp = find_agent(current_robot_agent_id);
+        Agent& maze_collision_counter_agent = find_agent(counter_text_agent_id);
+        string collision_string = R"(<g><style>.warning { font: bold 30px sans-serif; fill: red;}</style><text x="150" y="-110" dominant-baseline="middle" text-anchor="middle" class="warning"> Collision: )" + std::to_string(maze_collision_counter) + R"(</text></g>)";
+
+        if( ( -90 <= Robot_Agent_Temp.x() && Robot_Agent_Temp.x() <= -30 ) && ( 90 <= Robot_Agent_Temp.y() && Robot_Agent_Temp.y() <= 150 ) && ( maze_number == 1 ) ) {
+            //Completed maze 1
+            maze_collision_counter = 0;
             emit( Event( "SwitchMaze" ) );
-            counter = 0;
-            initial = 0;
+        } else if( ( -30 <= Robot_Agent_Temp.x() && Robot_Agent_Temp.x() <= 30 ) && ( -150 <= Robot_Agent_Temp.y() && Robot_Agent_Temp.y() <= -90 ) && ( maze_number == 2 ) ) {
+            //Completed maze 2
+            maze_collision_counter = 0;
+            emit( Event( "SwitchMaze" ) );
+        } else if( ( -30 <= Robot_Agent_Temp.x() && Robot_Agent_Temp.x() <= 30 ) && ( 90 <= Robot_Agent_Temp.y() && Robot_Agent_Temp.y() <= 150 ) && ( maze_number == 3 ) ) {
+            //Completed maze 3
+            maze_collision_counter = 0;
+            emit( Event( "SwitchMaze" ) );
+        } else if( ( -30 <= Robot_Agent_Temp.x() && Robot_Agent_Temp.x() <= 30 ) && ( -210 <= Robot_Agent_Temp.y() && Robot_Agent_Temp.y() <= -150 ) && ( maze_number == 4 ) ) {
+            //Completed maze 4
+            maze_collision_counter = 0;
+            emit( Event( "SwitchMaze" ) );
         }
+
+        if( maze_number == 4 ) {
+            collision_string = R"(<g><style>.warning { font: bold 30px sans-serif; fill: red;}</style><text x="150" y="-170" dominant-baseline="left" text-anchor="left" class="warning"}> Collision: )" + std::to_string(maze_collision_counter) + R"(</text></g>)";
+        }
+
+        if( maze_number == -1 ) {
+            collision_string = "";
+        }
+
+        maze_collision_counter_agent.decorate(collision_string);
+
+        for ( auto it = current_placer_tuples.begin(); it != current_placer_tuples.end(); it++ ) {
+            if ( std::get<3>((*it)) == 0 && ( make_placers == 1 ) ) {
+                Agent& temp_agent = add_agent("placer",std::get<0>((*it)),std::get<1>((*it)),std::get<2>((*it)), {{"fill","orange"}, {"fillOpacity", "25%"},{"stroke","none"}});
+                current_placer_agent_ids.push_back( temp_agent.get_id() );
+                std::get<3>((*it)) = 1;
+            }
+        }
+        /* Causes a segmentation fault
+        if ( make_placers == 0 ) {
+            for ( auto it = current_placer_agent_ids.begin(); it != current_placer_agent_ids.end(); it++ ) {
+                remove_agent( (*it) );
+            }
+            make_placers = 1;
+            current_placer_agent_ids.clear();
+        }
+        */
     }
 
     //! Stop method. This method should be  overridden by derived
@@ -179,14 +223,18 @@ class MazeCoordinatorController : public Process, public AgentInterface {
       \param loc_x The x coordinate to place the robot into
       \param loc_y The y coordinate to place the robot into
       \param loc_theta The theta angle to place the robot into
-      \return A vector of agent ids
+      \return An int of the robot agent id
     */
-    vector<int> add_robot(string robot_type, double loc_x, double loc_y, double loc_theta) {
-        vector<int> agent_ids;
+    int add_robot(string robot_type, double loc_x, double loc_y, double loc_theta) {
         Agent& temp = add_agent(robot_type, loc_x, loc_y, loc_theta, {{"fill","blue"},{"stroke","blue"}});
+        temp.decorate(R"(<g> fill="#blue" stroke="black"
+        <path d="M3945 7645 c-40 -23 -52 -45 -267 -477 -123 -249 -778 -1560 -1453
+        -2913 -1185 -2371 -1229 -2462 -1229 -2515 0 -88 52 -140 141 -140 43 0 182
+        68 1461 710 778 390 1418 710 1424 710 5 0 648 -318 1427 -706 786 -392 1433
+        -708 1454 -711 49 -7 119 33 142 81 32 68 26 88 -138 409 -84 166 -737 1468
+        -1451 2892 -714 1425 -1309 2605 -1323 2624 -47 63 -120 77 -188 36z"/> </g>)");
 
-        agent_ids.push_back(temp.get_id());
-        return agent_ids;
+        return temp.get_id();
     }
 
     //For debug example
@@ -361,11 +409,15 @@ class MazeCoordinatorController : public Process, public AgentInterface {
 
     int initial;
     int maze_number;
-    int counter;
+    int maze_collision_counter;
+
     string default_robot;
     vector<int> current_maze_agents_ids;
-    vector<int> current_robot_agent_ids;
+    int current_robot_agent_id;
     vector<int> current_placer_agent_ids;
+    vector<std::tuple<int,int,int,int>> current_placer_tuples;
+    int counter_text_agent_id;
+    bool make_placers;
 };
 
 class MazeCoordinator : public Agent {
