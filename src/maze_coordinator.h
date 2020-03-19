@@ -133,6 +133,9 @@ class MazeCoordinatorController : public Process, public AgentInterface {
                     }
                 }
 
+                Agent& maze_collision_counter_agent = find_agent(counter_text_agent_id);
+                maze_collision_counter_agent.decorate("");
+
                 Agent& temp_end_placer = add_agent("placer", 0, 0,0, {{"fill","white"},{"stroke","white"}});
                 maze_text_agent.decorate("");
 
@@ -162,54 +165,56 @@ class MazeCoordinatorController : public Process, public AgentInterface {
     //! determined by the period used when the process is scheduled with the
     //! Manager (see Elma::Manager::schedule).
     void update() {
-        Agent& Robot_Agent_Temp = find_agent(current_robot_agent_id);
         Agent& maze_collision_counter_agent = find_agent(counter_text_agent_id);
-        string collision_string = R"(<g><style>.warning { font: bold 30px sans-serif; fill: red;}</style><text x="150" y="-110" dominant-baseline="middle" text-anchor="middle" class="warning"> Collision: )" + std::to_string(maze_collision_counter) + R"(</text></g>)";
+        if (maze_number != -1 ) {
+            Agent& Robot_Agent_Temp = find_agent(current_robot_agent_id);
+            
+            string collision_string = R"(<g><style>.warning { font: bold 30px sans-serif; fill: red;}</style><text x="150" y="-110" dominant-baseline="middle" text-anchor="middle" class="warning"> Collision: )" + std::to_string(maze_collision_counter) + R"(</text></g>)";
 
-        if( ( -90 <= Robot_Agent_Temp.x() && Robot_Agent_Temp.x() <= -30 ) && ( 90 <= Robot_Agent_Temp.y() && Robot_Agent_Temp.y() <= 150 ) && ( maze_number == 1 ) ) {
-            //Completed maze 1
-            maze_collision_counter = 0;
-            emit( Event( "SwitchMaze" ) );
-        } else if( ( -30 <= Robot_Agent_Temp.x() && Robot_Agent_Temp.x() <= 30 ) && ( -150 <= Robot_Agent_Temp.y() && Robot_Agent_Temp.y() <= -90 ) && ( maze_number == 2 ) ) {
-            //Completed maze 2
-            maze_collision_counter = 0;
-            emit( Event( "SwitchMaze" ) );
-        } else if( ( -30 <= Robot_Agent_Temp.x() && Robot_Agent_Temp.x() <= 30 ) && ( 90 <= Robot_Agent_Temp.y() && Robot_Agent_Temp.y() <= 150 ) && ( maze_number == 3 ) ) {
-            //Completed maze 3
-            maze_collision_counter = 0;
-            emit( Event( "SwitchMaze" ) );
-        } else if( ( -30 <= Robot_Agent_Temp.x() && Robot_Agent_Temp.x() <= 30 ) && ( -210 <= Robot_Agent_Temp.y() && Robot_Agent_Temp.y() <= -150 ) && ( maze_number == 4 ) ) {
-            //Completed maze 4
-            maze_collision_counter = 0;
-            emit( Event( "SwitchMaze" ) );
-        }
-
-        if( maze_number == 4 ) {
-            collision_string = R"(<g><style>.warning { font: bold 30px sans-serif; fill: red;}</style><text x="150" y="-170" dominant-baseline="left" text-anchor="left" class="warning"}> Collision: )" + std::to_string(maze_collision_counter) + R"(</text></g>)";
-        }
-
-        if( maze_number == -1 ) {
-            collision_string = "";
-        }
-
-        maze_collision_counter_agent.decorate(collision_string);
-
-        for ( auto it = current_placer_tuples.begin(); it != current_placer_tuples.end(); it++ ) {
-            if ( std::get<3>((*it)) == 0 && ( make_placers == 1 ) ) {
-                Agent& temp_agent = add_agent("placer",std::get<0>((*it)),std::get<1>((*it)),std::get<2>((*it)), {{"fill","orange"}, {"fillOpacity", "25%"},{"stroke","none"}});
-                current_placer_agent_ids.push_back( temp_agent.get_id() );
-                std::get<3>((*it)) = 1;
+            if( ( -90 <= Robot_Agent_Temp.x() && Robot_Agent_Temp.x() <= -30 ) && ( 90 <= Robot_Agent_Temp.y() && Robot_Agent_Temp.y() <= 150 ) && ( maze_number == 1 ) ) {
+                //Completed maze 1
+                maze_collision_counter = 0;
+                emit( Event( "SwitchMaze" ) );
+            } else if( ( -30 <= Robot_Agent_Temp.x() && Robot_Agent_Temp.x() <= 30 ) && ( -150 <= Robot_Agent_Temp.y() && Robot_Agent_Temp.y() <= -90 ) && ( maze_number == 2 ) ) {
+                //Completed maze 2
+                maze_collision_counter = 0;
+                emit( Event( "SwitchMaze" ) );
+            } else if( ( -30 <= Robot_Agent_Temp.x() && Robot_Agent_Temp.x() <= 30 ) && ( 90 <= Robot_Agent_Temp.y() && Robot_Agent_Temp.y() <= 150 ) && ( maze_number == 3 ) ) {
+                //Completed maze 3
+                maze_collision_counter = 0;
+                emit( Event( "SwitchMaze" ) );
+            } else if( ( -30 <= Robot_Agent_Temp.x() && Robot_Agent_Temp.x() <= 30 ) && ( -210 <= Robot_Agent_Temp.y() && Robot_Agent_Temp.y() <= -150 ) && ( maze_number == 4 ) ) {
+                //Completed maze 4
+                maze_collision_counter = 0;
+                emit( Event( "SwitchMaze" ) );
             }
-        }
-        /* Causes a segmentation fault
-        if ( make_placers == 0 ) {
-            for ( auto it = current_placer_agent_ids.begin(); it != current_placer_agent_ids.end(); it++ ) {
-                remove_agent( (*it) );
+
+            if( maze_number == 4 ) {
+                collision_string = R"(<g><style>.warning { font: bold 30px sans-serif; fill: red;}</style><text x="150" y="-170" dominant-baseline="left" text-anchor="left" class="warning"}> Collision: )" + std::to_string(maze_collision_counter) + R"(</text></g>)";
             }
-            make_placers = 1;
-            current_placer_agent_ids.clear();
+
+            maze_collision_counter_agent.decorate(collision_string);
+
+            for ( auto it = current_placer_tuples.begin(); it != current_placer_tuples.end(); it++ ) {
+                if ( std::get<3>((*it)) == 0 && ( make_placers == 1 ) ) {
+                    Agent& temp_agent = add_agent("placer",std::get<0>((*it)),std::get<1>((*it)),std::get<2>((*it)), {{"fill","orange"}, {"fillOpacity", "25%"},{"stroke","none"}});
+                    current_placer_agent_ids.push_back( temp_agent.get_id() );
+                    std::get<3>((*it)) = 1;
+                }
+            }
+            /* Causes a segmentation fault
+            if ( make_placers == 0 ) {
+                for ( auto it = current_placer_agent_ids.begin(); it != current_placer_agent_ids.end(); it++ ) {
+                    remove_agent( (*it) );
+                }
+                make_placers = 1;
+                current_placer_agent_ids.clear();
+            }
+            */
+        } else if (maze_number == -1 ) {
+            // std::cout << "Made it to stop() in maze_coordinator.  Thanks again for playing!\n";
+            maze_collision_counter_agent.decorate("");
         }
-        */
     }
 
     //! Stop method. This method should be  overridden by derived
@@ -227,13 +232,6 @@ class MazeCoordinatorController : public Process, public AgentInterface {
     */
     int add_robot(string robot_type, double loc_x, double loc_y, double loc_theta) {
         Agent& temp = add_agent(robot_type, loc_x, loc_y, loc_theta, {{"fill","blue"},{"stroke","blue"}});
-        temp.decorate(R"(<g> fill="#blue" stroke="black"
-        <path d="M3945 7645 c-40 -23 -52 -45 -267 -477 -123 -249 -778 -1560 -1453
-        -2913 -1185 -2371 -1229 -2462 -1229 -2515 0 -88 52 -140 141 -140 43 0 182
-        68 1461 710 778 390 1418 710 1424 710 5 0 648 -318 1427 -706 786 -392 1433
-        -708 1454 -711 49 -7 119 33 142 81 32 68 26 88 -138 409 -84 166 -737 1468
-        -1451 2892 -714 1425 -1309 2605 -1323 2624 -47 63 -120 77 -188 36z"/> </g>)");
-
         return temp.get_id();
     }
 
