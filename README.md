@@ -122,7 +122,7 @@ Projects are due Wednesday March 18 at 11:59pm.
 | 5   | Repo has a README.md file | DONE! |
 | 10  | README has an overview of what the goal of the project is | DONE! |
 | 10  | README has a description of key challenges and how they were addressed |DONE! |
-| 10  | README describes how to install and run the code (assuming the user has docker installed) |
+| 10  | README describes how to install and run the code (assuming the user has docker installed) | DONE! |
 | 10  | README describes how to run and/or use the project | DONE! |
 | 5   | README acknowedges all sources of information or code used | DONE! |
 | 20  | Project compiles | DONE! |
