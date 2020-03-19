@@ -34,12 +34,16 @@ Key Challenges
         - If `previous_cell` was not in the `positions_been` set, then the `positions_cell`'s `x` and `y` coordinates were new and a placer should be placed in that location
     - A `placer` agent was created to visually mark on the page where the robot has been
 - ***Removing `placer` agents after completing all mazes***
-    - Another issue run into during this project was removing `placer` agents by the `maze_controller`.
+    - Another issue run into during this project was removing `placer` agents by the `maze_coordinator`.
     - To debug, the adding and removing of the `placer` agents was put into the `maze_robot` class
         - Unfortunately, segmentation faults still occured
     - The same methedology was used for adding and removing the rectangular 'pieces', so it is believed that somehow agents added via the init() and watch() functions cannot be safely removed by enviro in another function
         - Agents were verified that they existed and could be found before trying to remove them via `remove_agent()`, however, as soon as this function was called with an agent_id that belonged to a `placer` agent, a segementation fault occurred.
-
+- ***Tracking collisions***
+    - A final challenge was incorporating collision tracking
+    - Since each rectangle 'piece' was a dynamic agent, the `maze_robot` could send events to the `maze_coordinator` when the robot collided with one of the rectangular 'pieces'
+    - A separate counter had to be incorporated into the `maze_coordinator` and reset for each maze level
+    
 Acknowledgements
 ===
 - Many thanks to Professor Klavins for his example code in the enviro github and for the time and effort from the TAs throughout the quarter of the EEP520-W20 class
